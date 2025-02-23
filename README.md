@@ -1,8 +1,39 @@
-# OCR Extraction
-Uses Azure OCR service to extract text from images. 
+# OCR Extraction Application
 
-100% of the Python and HTML was written by Generative AI. At least 200 prompts were created and used with multiple models in creating this app.
+This repository contains a Flask-based web application that uses the **Azure OCR Service** to extract text from images and generate a downloadable Excel report containing the extracted text. The application is designed for batch processing and supports a variety of image formats, with a focus on scalability and usability.
 
-![image](https://github.com/user-attachments/assets/44c21b9b-3827-4ca2-864f-b2c44ac5806a)
+---
 
-Uses Azure OCR so bring you own endpoint and API key.
+## Key Features
+
+- **Batch OCR Processing**: Process all images in a folder in one go.
+- **Azure OCR Integration**: Leverages the Azure OCR service for accurate text extraction.
+- **Excel Report Generation**: Outputs extracted text into a downloadable `.xlsx` file.
+- **File Format Handling**: Automatically converts unsupported image formats to supported formats (e.g., PNG, JPG).
+- **Real-Time Progress Tracking**: Provides progress updates during processing.
+- **Web-Based Interface**: User-friendly HTML interface for inputting folder paths and tracking progress.
+- **Retry Logic**: Automatically retries failed OCR calls with exponential back-off to ensure robustness.
+- **Scalable Design**: Processes images concurrently using a thread pool for improved performance.
+
+---
+
+## Screenshot
+
+![OCR Processor Screenshot](https://github.com/user-attachments/assets/44c21b9b-3827-4ca2-864f-b2c44ac5806a)
+
+---
+
+## How to Set Up and Run
+
+### Prerequisites
+
+1. **Python**: Ensure Python 3.8 or later is installed.
+2. **Azure Credentials**: You need an Azure Cognitive Services account with a valid **Endpoint** and **API Key**.
+3. **Libraries**: Install the required Python packages listed in `requirements.txt` (or below).
+
+### Installation Steps
+
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/your-repo/OCR_Extraction.git
+   cd OCR_Extraction
