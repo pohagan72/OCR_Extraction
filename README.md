@@ -1,3 +1,5 @@
+**100% of this app was written using Generative AI, including this Readme file**
+
 # OCR Extraction Application
 
 This repository contains a Flask-based web application that uses the **Azure OCR Service** to extract text from images and generate a downloadable Excel report containing the extracted text. The application is designed for batch processing and supports a variety of image formats, with a focus on scalability and usability.
