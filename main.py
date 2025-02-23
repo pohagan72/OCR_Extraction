@@ -21,8 +21,8 @@ app = Flask(__name__)
 logging.basicConfig(filename='ocr_processing.log', level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 # Hardcoded Azure credentials (not recommended for production)
-AZURE_ENDPOINT = "https://ls-s-eus-paulohagan-ocr.cognitiveservices.azure.com/"
-AZURE_KEY = "c5365ce787e7460ba5c301a8f491a45c"
+AZURE_ENDPOINT = "Endpoint_Goes_Here"
+AZURE_KEY = "Key_Goes_Here"
 
 # Initialize Azure Computer Vision client
 computervision_client = ComputerVisionClient(AZURE_ENDPOINT, CognitiveServicesCredentials(AZURE_KEY))
