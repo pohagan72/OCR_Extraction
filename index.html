@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OCR Processor</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+        }
+        input[type="text"] {
+            width: calc(100% - 22px);
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .status {
+            margin-top: 20px;
+            font-size: 14px;
+        }
+        .progress-bar {
+            width: 100%;
+            background-color: #f3f3f3;
+            border-radius: 5px;
+            margin-top: 10px;
+        }
+        .progress {
+            width: 0%;
+            height: 30px;
+            background-color: #4caf50;
+            border-radius: 5px;
+            text-align: center;
+            line-height: 30px;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>OCR Processor</h1>
+        <form id="ocrForm">
+            <label for="folderPath">Enter the folder path:</label>
+            <input type="text" id="folderPath" name="folderPath" placeholder="Enter folder path" required>
+            <button type="submit">Start Processing</button>
+        </form>
+        <div class="status" id="status"></div>
+        <div class="progress-bar">
+            <div class="progress" id="progress"></div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById("ocrForm").addEventListener("submit", async function (e) {
+            e.preventDefault();
+            const folderPath = document.getElementById("folderPath").value;
+            const statusDiv = document.getElementById("status");
+            const progressDiv = document.getElementById("progress");
+
+            statusDiv.innerHTML = "Processing...";
+            progressDiv.style.width = "0%";
+            progressDiv.innerHTML = "0%";
+
+            try {
+                const response = await fetch("/process", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({ folder_path: folderPath })
+                });
+
+                if (response.ok) {
+                    // Trigger file download
+                    const blob = await response.blob();
+                    const url = window.URL.createObjectURL(blob);
+                    const a = document.createElement("a");
+                    a.href = url;
+                    a.download = "ocr_results.xlsx";
+                    document.body.appendChild(a);
+                    a.click();
+                    a.remove();
+                    window.URL.revokeObjectURL(url);
+
+                    // Update status message
+                    statusDiv.innerHTML = "Processing complete! File downloaded.";
+                    progressDiv.style.width = "100%";
+                    progressDiv.innerHTML = "100%";
+                } else {
+                    const result = await response.json();
+                    statusDiv.innerHTML = `Error: ${result.error}`;
+                }
+            } catch (error) {
+                statusDiv.innerHTML = `Error: ${error.message}`;
+            }
+        });
+
+        // Function to update progress
+        async function updateProgress() {
+            const progressDiv = document.getElementById("progress");
+            const statusDiv = document.getElementById("status");
+
+            while (true) {
+                const response = await fetch("/progress");
+                const data = await response.json();
+                if (data.total_images === 0) {
+                    statusDiv.innerHTML = "Waiting to start processing...";
+                    progressDiv.style.width = "0%";
+                    progressDiv.innerHTML = "0%";
+                } else {
+                    const progress = (data.processed_images / data.total_images) * 100;
+                    progressDiv.style.width = `${progress}%`;
+                    progressDiv.innerHTML = `${Math.round(progress)}%`;
+                    statusDiv.innerHTML = `Processing... ${data.processed_images} of ${data.total_images} images processed.`;
+
+                    if (data.processed_images >= data.total_images) {
+                        break;
+                    }
+                }
+                await new Promise(resolve => setTimeout(resolve, 1000));
+            }
+        }
+
+        // Start updating progress when the form is submitted
+        document.getElementById("ocrForm").addEventListener("submit", function () {
+            updateProgress();
+        });
+    </script>
+</body>
+</html>
