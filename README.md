@@ -21,7 +21,7 @@ This repository contains a Flask-based web application that uses the **Azure OCR
 
 ## Screenshot
 
-![OCR Processor Screenshot](https://github.com/user-attachments/assets/44c21b9b-3827-4ca2-864f-b2c44ac5806a)
+![OCR Processor Screenshot](https://github.com/user-attachments/assets/a7509103-0ec8-43ad-86cc-204894f45e24)
 
 ---
 
